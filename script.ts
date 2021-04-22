@@ -35,5 +35,24 @@ async function merge() {
   return mergedData;
 }
 
+/**
+ * Counts how many posts were posted by users
+ * @returns String list containing how many posts each user wrote
+ */
+async function count() {
+  const data: any = await merge();
+  const result = [];
+
+  for (let i = 0; i < data.length; i++) {
+    const currUser = data[i];
+    const postsAmount = currUser.posts.length;
+    result.push(`${currUser.name} wrote ${postsAmount} posts.`);
+  }
+  return result;
+}
+
 // 1) Megre function
-(async () => console.log(await merge()))();
+// (async () => console.log(await merge()))();
+
+// 2) Count function
+(async () => console.log(await count()))();
