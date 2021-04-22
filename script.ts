@@ -108,15 +108,20 @@ async function find() {
  * @returns Distance beetween two geographical coordinates in kilometers
  */
 function countDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
-  const p = 0.017453292519943295; // Math.PI / 180
+  const p = 0.017453292519943295;
   const c = Math.cos;
   const a =
     0.5 -
     c((lat2 - lat1) * p) / 2 +
     (c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p))) / 2;
 
-  return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+  return 12742 * Math.asin(Math.sqrt(a));
 }
+
+/**
+ * Printing result in console
+ * To print please type in your terminal: npx ts-node script.ts
+ */
 
 // 1) Megre posts with users function
 // (async () => console.log(await merge()))();
