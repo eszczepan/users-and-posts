@@ -51,8 +51,27 @@ async function count() {
   return result;
 }
 
-// 1) Megre function
+/**
+ * Check post titles uniqueness
+ * @returns String list of titles occur more than once or if the list is empty information that all titles are unique
+ */
+async function check() {
+  const cache: any = {};
+  const result = [];
+  const posts = await fetch(postsURL).then((res: any) => res.json());
+  for (let i = 0; i < posts.length; i++) {
+    const currTitle: string = posts[i].title;
+    cache[currTitle] = cache[currTitle] + 1 || 1;
+    if (cache[currTitle] === 2) result.push(currTitle);
+  }
+  return result.length > 0 ? result.length : "All titles are unique";
+}
+
+// 1) Megre posts with users function
 // (async () => console.log(await merge()))();
 
-// 2) Count function
-(async () => console.log(await count()))();
+// 2) Count the number of posts for each user function
+// (async () => console.log(await count()))();
+
+// 3) Check post titles uniqueness function
+(async () => console.log(await check()))();
