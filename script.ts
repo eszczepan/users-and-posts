@@ -5,26 +5,26 @@ if (!globalThis.fetch) {
   globalThis.fetch = fetch;
 }
 
-import { IPosts, IUsers, FetchResponse } from "./models";
+import { IPost, IUser, FetchResponse, IMerged } from "./models";
 
-const postsURL = "https://jsonplaceholder.typicode.com/posts";
-const usersURL = "https://jsonplaceholder.typicode.com/users";
+const postsURL: string = "https://jsonplaceholder.typicode.com/posts";
+const usersURL: string = "https://jsonplaceholder.typicode.com/users";
 
 /**
  * Retrives data about posts and combines them with data about users
  * @returns Merged posts data with users data fetched from API
  */
 async function merge() {
-  let mergedData = null;
+  let mergedData: IMerged | null = null;
   const promises = [fetch(postsURL), fetch(usersURL)];
 
   await Promise.all(promises)
     .then((response) => Promise.all(response.map((res) => res.json())))
     .then(([posts, users]) => {
       for (let i = 0; i < posts.length; i++) {
-        const currPost = posts[i];
+        const currPost: IPost = posts[i];
         const currPostId = currPost.userId;
-        const currUser = users[currPostId - 1];
+        const currUser: IMerged = users[currPostId - 1];
         if (currUser["posts"])
           currUser["posts"] = [...currUser["posts"], currPost];
         else currUser["posts"] = [currPost];
@@ -41,10 +41,10 @@ async function merge() {
  */
 async function count() {
   const data: any = await merge();
-  const result = [];
+  const result: string[] = [];
 
   for (let i = 0; i < data.length; i++) {
-    const currUser = data[i];
+    const currUser: IMerged = data[i];
     const postsAmount = currUser.posts.length;
     result.push(`${currUser.name} wrote ${postsAmount} posts.`);
   }
@@ -57,8 +57,8 @@ async function count() {
  */
 async function check() {
   const cache: any = {};
-  const result = [];
-  const posts = await fetch(postsURL).then((res: any) => res.json());
+  const result: string[] = [];
+  const posts: IPost[] = await fetch(postsURL).then((res: any) => res.json());
   for (let i = 0; i < posts.length; i++) {
     const currTitle: string = posts[i].title;
     cache[currTitle] = cache[currTitle] + 1 || 1;
@@ -76,8 +76,8 @@ async function find() {
   let users = await fetch(usersURL).then((res: any) => res.json());
 
   while (users.length > 1) {
-    let closestDistance = Infinity;
-    let closestUsers: any[] = [];
+    let closestDistance: number = Infinity;
+    let closestUsers: IUser[] = [];
     for (let i = 1; i < users.length; i++) {
       const distance = countDistance(
         users[0].address.geo.lat,
@@ -91,7 +91,7 @@ async function find() {
       }
       if (i === users.length - 1 && closestUsers.length === 2) {
         users = users.filter(
-          (user: any) =>
+          (user: IUser) =>
             user.id !== closestUsers[0].id && user.id !== closestUsers[1].id
         );
         result[closestUsers[0].name] = closestUsers[1].name;
@@ -107,7 +107,12 @@ async function find() {
  * Source: https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula?rq=1
  * @returns Distance beetween two geographical coordinates in kilometers
  */
-function countDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+function countDistance(
+  lat1: number,
+  lon1: number,
+  lat2: number,
+  lon2: number
+): number {
   const p = 0.017453292519943295;
   const c = Math.cos;
   const a =

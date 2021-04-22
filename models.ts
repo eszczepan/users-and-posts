@@ -1,11 +1,11 @@
-export interface IPosts {
+export interface IPost {
   userId: number;
   id: number;
   title: string;
   body: string;
 }
 
-export interface IUsers {
+export interface IUser {
   id: number;
   name: string;
   username: string;
@@ -22,4 +22,22 @@ export interface IUsers {
   };
 }
 
-export type FetchResponse = IPosts | IUsers;
+export interface IMerged {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+  address: {
+    street: string;
+    suite: string;
+    city: string;
+    zipcode: string;
+    geo: {
+      lat: string;
+      lng: string;
+    };
+  };
+  posts: IPost[];
+}
+
+export type FetchResponse = IPost | IUser;
