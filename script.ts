@@ -67,6 +67,57 @@ async function check() {
   return result.length > 0 ? result.length : "All titles are unique";
 }
 
+/**
+ * Find users who live closest to other
+ * @returns Object of user pairs which lives closest to each other
+ */
+async function find() {
+  const result: any = {};
+  let users = await fetch(usersURL).then((res: any) => res.json());
+
+  while (users.length > 1) {
+    let closestDistance = Infinity;
+    let closestUsers: any[] = [];
+    for (let i = 1; i < users.length; i++) {
+      const distance = countDistance(
+        users[0].address.geo.lat,
+        users[0].address.geo.lng,
+        users[i].address.geo.lat,
+        users[i].address.geo.lng
+      );
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestUsers = [users[0], users[i]];
+      }
+      if (i === users.length - 1 && closestUsers.length === 2) {
+        users = users.filter(
+          (user: any) =>
+            user.id !== closestUsers[0].id && user.id !== closestUsers[1].id
+        );
+        result[closestUsers[0].name] = closestUsers[1].name;
+      }
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Function based on Haversine formula
+ * Source: https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula?rq=1
+ * @returns Distance beetween two geographical coordinates in kilometers
+ */
+function countDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const p = 0.017453292519943295; // Math.PI / 180
+  const c = Math.cos;
+  const a =
+    0.5 -
+    c((lat2 - lat1) * p) / 2 +
+    (c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p))) / 2;
+
+  return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+}
+
 // 1) Megre posts with users function
 // (async () => console.log(await merge()))();
 
@@ -74,4 +125,7 @@ async function check() {
 // (async () => console.log(await count()))();
 
 // 3) Check post titles uniqueness function
-(async () => console.log(await check()))();
+// (async () => console.log(await check()))();
+
+// 4) Find users who live closest to other
+(async () => console.log(await find()))();
