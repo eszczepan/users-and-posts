@@ -5,7 +5,7 @@ if (!globalThis.fetch) {
   globalThis.fetch = fetch;
 }
 
-import { IPost, IUser, FetchResponse, IMerged } from "./models";
+import { IPost, IUser, IMerged, IFindResult, ICheckCache } from "./models";
 
 const postsURL: string = "https://jsonplaceholder.typicode.com/posts";
 const usersURL: string = "https://jsonplaceholder.typicode.com/users";
@@ -40,11 +40,11 @@ export async function merge() {
  * @returns String list containing how many posts each user wrote
  */
 export async function count() {
-  const data: any = await merge();
+  const data: IMerged[] | null = await merge();
   const result: string[] = [];
 
-  for (let i = 0; i < data.length; i++) {
-    const currUser: IMerged = data[i];
+  for (let i = 0; i < data!.length; i++) {
+    const currUser: IMerged = data![i];
     const postsAmount = currUser.posts.length;
     result.push(`${currUser.name} wrote ${postsAmount} posts.`);
   }
@@ -56,7 +56,7 @@ export async function count() {
  * @returns String list of titles occur more than once or if the list is empty information that all titles are unique
  */
 export async function check() {
-  const cache: any = {};
+  const cache: ICheckCache = {};
   const result: string[] = [];
   const posts: IPost[] = await fetch(postsURL).then((res: any) => res.json());
   for (let i = 0; i < posts.length; i++) {
@@ -72,7 +72,7 @@ export async function check() {
  * @returns Object of user pairs which lives closest to each other
  */
 export async function find() {
-  const result: any = {};
+  const result: IFindResult = {};
   let users = await fetch(usersURL).then((res: any) => res.json());
 
   while (users.length > 1) {
@@ -125,7 +125,7 @@ export function countDistance(
 
 /**
  * Printing result in console
- * To print please type in your terminal: npx ts-node script.ts
+ * To print type in your terminal: npx ts-node script.ts
  */
 
 // 1) Megre posts with users function

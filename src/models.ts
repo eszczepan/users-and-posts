@@ -40,4 +40,10 @@ export interface IMerged {
   posts: IPost[];
 }
 
-export type FetchResponse = IPost | IUser;
+export interface IFindResult {
+  [name: string]: string;
+}
+
+export interface ICheckCache {
+  [name: string]: number;
+}
