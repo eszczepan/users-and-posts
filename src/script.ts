@@ -14,7 +14,7 @@ const usersURL: string = "https://jsonplaceholder.typicode.com/users";
  * Retrives data about posts and combines them with data about users
  * @returns Merged posts data with users data fetched from API
  */
-async function merge() {
+export async function merge() {
   let mergedData: IMerged | null = null;
   const promises = [fetch(postsURL), fetch(usersURL)];
 
@@ -39,7 +39,7 @@ async function merge() {
  * Counts how many posts were posted by users
  * @returns String list containing how many posts each user wrote
  */
-async function count() {
+export async function count() {
   const data: any = await merge();
   const result: string[] = [];
 
@@ -55,7 +55,7 @@ async function count() {
  * Check post titles uniqueness
  * @returns String list of titles occur more than once or if the list is empty information that all titles are unique
  */
-async function check() {
+export async function check() {
   const cache: any = {};
   const result: string[] = [];
   const posts: IPost[] = await fetch(postsURL).then((res: any) => res.json());
@@ -71,7 +71,7 @@ async function check() {
  * Find users who live closest to other
  * @returns Object of user pairs which lives closest to each other
  */
-async function find() {
+export async function find() {
   const result: any = {};
   let users = await fetch(usersURL).then((res: any) => res.json());
 
@@ -107,7 +107,7 @@ async function find() {
  * Source: https://stackoverflow.com/questions/27928/calculate-distance-between-two-latitude-longitude-points-haversine-formula?rq=1
  * @returns Distance beetween two geographical coordinates in kilometers
  */
-function countDistance(
+export function countDistance(
   lat1: number,
   lon1: number,
   lat2: number,
@@ -138,4 +138,4 @@ function countDistance(
 // (async () => console.log(await check()))();
 
 // 4) Find users who live closest to other
-(async () => console.log(await find()))();
+// (async () => console.log(await find()))();
