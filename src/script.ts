@@ -64,7 +64,7 @@ export async function check() {
     cache[currTitle] = cache[currTitle] + 1 || 1;
     if (cache[currTitle] === 2) result.push(currTitle);
   }
-  return result.length > 0 ? result.length : "All titles are unique";
+  return result.length > 0 ? result : "All titles are unique";
 }
 
 /**

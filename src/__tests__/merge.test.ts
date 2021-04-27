@@ -235,7 +235,7 @@ beforeAll(async () => {
   result = await merge();
 });
 
-describe("Checks length of merged data", () => {
+describe("Tests for merge function", () => {
   it("Checks length of merged data", () => {
     expect(result).toHaveLength(10);
   });
