@@ -20,4 +20,5 @@ npm install
 ## Available Scripts
 
 `npm start` - runs script
+
 `npm run test` - runs tests
